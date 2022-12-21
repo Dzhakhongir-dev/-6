@@ -1,16 +1,17 @@
-﻿using System.IO;
+using System.IO;
 internal class Program
 {
     private static void Main(string[] args)
     {
+        string pathToFile = "data.txt";
+
         while (true)
         {
             Console.Clear();
             Console.WriteLine(
             "Введите 1 — Что бы вывести данные на экран.\n" +
             "Введите 2 — Что бы заполнить данные и добавить новую запись.\n" +
-            "Введите 3 - Что бы убрать символы '#' из записи.\n" +
-            "Введите 4 - Что бы удалить запись.");
+            "Введите 3 - Что бы удалить запись.");
 
 
             string inputAction = Console.ReadLine();
@@ -18,18 +19,14 @@ internal class Program
             switch (inputAction)
             {
                 case "1":
-                    ReadMethod();
+                    ReadMethod(pathToFile);
                     break;
 
                 case "2":
-                    WriteMethod();
+                    WriteMethod(pathToFile);
                     break;
 
                 case "3":
-                    SplitMethod();
-                    break;
-
-                case "4":
                     Console.Clear();
                     Console.WriteLine("Вы уверены?\n" +
                         "Нажмите 1 если хотите удалить\n" +
@@ -40,12 +37,12 @@ internal class Program
                     switch (choose)
                     {
                         case "1":
-                            DeleteMethod();
+                            DeleteMethod(pathToFile);
                             Console.WriteLine("Файл Удален!");
                             break;
 
                             case "2":
-                            ReadMethod();
+                            ReadMethod(pathToFile);
                             break;
 
                         default:
@@ -62,10 +59,8 @@ internal class Program
         }
     }
 
-    public static void DeleteMethod()
+    public static string DeleteMethod(string pathToFile)
     {
-        string pathToFile = @"D:\SkillBoxExample.txt";
-
         if (File.Exists(pathToFile))
         {
             File.Delete(pathToFile);
@@ -75,41 +70,22 @@ internal class Program
             Console.WriteLine("Файл и так отсутвует!");
             Console.ReadLine();
         }
-    }
-
-    public static void SplitMethod()
-    {
-        Console.Clear();
-        string pathToFile = File.ReadAllText(@"D:\SkillBoxExample.txt");
-
-        string[] textInFile = pathToFile.Split('#');
-
-        foreach (var item in textInFile)
-        {
-            Console.Write(item);
-        }
-
-        for (int i = 0; i < textInFile.Length; i++)
-        {
-            Console.Write(textInFile[i]);
-        }
-        Console.ReadKey();
+        return pathToFile;
     }
     
-    public static void ReadMethod()
+    public static string ReadMethod(string pathToFile)
     {
-        string pathToFile = @"D:\SkillBoxExample.txt";
 
         Console.Clear();
+
 
         if (!File.Exists(pathToFile))
         {
-            
-            Console.WriteLine("Файлa не существует!\nСейчас создам!");
-
             FileStream fileStream = new FileStream(pathToFile, FileMode.Append);
 
             StreamWriter streamWriter = new StreamWriter(fileStream);
+
+            Console.WriteLine("Файлa не существует!\nСоздаю новый Файл!");
 
             streamWriter.Close();
             Console.ReadKey();
@@ -117,21 +93,23 @@ internal class Program
 
         else
         {
-            string[] textInFile = File.ReadAllLines(pathToFile);
+            string text = File.ReadAllText(pathToFile);
 
-            File.WriteAllLines(pathToFile, textInFile);
+            string[] textInFile = text.Split('#');
 
             for (int i = 0; i < textInFile.Length; i++)
             {
-                Console.WriteLine(textInFile[i]);
+                Console.Write(textInFile[i]);
             }
+
+
             Console.ReadKey();
         }
+        return pathToFile;
     }
 
-    public static void WriteMethod()
+    public static string WriteMethod(string pathToFile)
     {
-        string pathToFile = @"D:\SkillBoxExample.txt";
 
         FileStream fileStream = new FileStream(pathToFile, FileMode.Append);
 
@@ -160,8 +138,8 @@ internal class Program
         int height = Convert.ToInt32(Console.ReadLine());
 
         Console.Write("Введите Дату Рождения - ");
-        int dateOfBirth = Convert.ToInt32(Console.ReadLine());
-
+        string dateOfBirth = Console.ReadLine();
+        
         Console.Write("Введите Место Рождения - ");
         string placeOfBirth = Console.ReadLine();
 
@@ -180,6 +158,7 @@ internal class Program
 
         streamWriter.Close();
         fileStream.Close();
-        
+
+        return pathToFile;
     }
 }
